@@ -9,8 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import com.revup.core.navigation.AppNavHost
 import com.revup.core.ui.theme.RepairLinkAndroidTheme
-import com.revup.features.auth.presentation.LoginScreen
 
 
 class MainActivity : ComponentActivity() {
@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             RepairLinkAndroidTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    LoginScreen(
+                    AppNavHost(
                         modifier = Modifier
                             .consumeWindowInsets(innerPadding)
                             .padding(innerPadding).fillMaxSize()

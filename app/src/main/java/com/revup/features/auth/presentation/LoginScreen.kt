@@ -26,12 +26,13 @@ import com.revup.core.ui.theme.RepairLinkAndroidTheme
 @Composable
 fun LoginScreenPreview(){
     RepairLinkAndroidTheme(){
-        LoginScreen()
+        LoginScreen(onAcceder = {})
     }
 }
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
+    onAcceder: () -> Unit
 ){
     val viewModel = remember { LoginViewModel() }
 
@@ -62,7 +63,7 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally) {
 
             Button(
-                onClick = {viewModel.onAcceder()},
+                onClick = {onAcceder()},
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp)
             ) {Text("Acceder", fontSize = 16.sp)}
         }
