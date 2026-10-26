@@ -6,8 +6,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavHostController
 import androidx.compose.ui.Modifier
+import com.revup.features.aceptarcoche.presentation.AceptarCocheScreen
 import com.revup.features.auth.presentation.LoginScreen
 import com.revup.features.home.presentation.HomeScreen
+import com.revup.features.panel.presentation.PanelScreen
 import com.revup.features.reparaciones.presentation.ReparacionesScreen
 
 @Composable
@@ -29,16 +31,16 @@ fun AppNavHost(
         }
 
         composable(Routes.Home.route) {
-            HomeScreen(
-                onReparaciones = {
+            PanelScreen(
+                onAceptarCoche = {
                     navController.navigate(Routes.Reparaciones.route)
                 }
             )
         }
         composable(Routes.Reparaciones.route){
-            ReparacionesScreen(
-                onHome = {
-                    navController.navigate(Routes.Home.route)
+            AceptarCocheScreen(
+                onVolver = {
+                    navController.popBackStack()
                 }
             )
         }
