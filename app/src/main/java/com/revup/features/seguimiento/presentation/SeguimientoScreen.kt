@@ -1,9 +1,12 @@
 package com.revup.features.seguimiento.presentation
 
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -39,7 +42,11 @@ fun SeguimientoScreen(
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
             //Cabecera: esc,info.coche y estado.coche
-
+            Row(modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ){
+            }
         }
     }}
 }
