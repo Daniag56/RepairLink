@@ -61,8 +61,18 @@ fun SeguimientoScreen(
                     Text(text = "ESTADO DE LA REPARACION", fontSize = 12.sp, modifier = Modifier.padding(16.dp))
                 }
             }
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) { }
+            //Pasos de la reparacion
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                PasoSeguimiento("✓","TITULO SEG","DETALLE SEG")
+                PasoSeguimiento("✓","TITULO SEG","DETALLE SEG")
+                PasoSeguimiento("✓","TITULO SEG","DETALLE SEG")
+                PasoSeguimiento("✓","TITULO SEG","DETALLE SEG")
+            }
         }
+        Button(
+            onClick = { },
+            modifier = Modifier.fillMaxWidth()
+        ) { Text("Escribir al taller", fontSize = 16.sp)}
     }}
 }
 
@@ -72,5 +82,14 @@ fun PasoSeguimiento(
     titulo: String,
     detalle: String
 ){
-
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = icono, fontSize = 16.sp)
+        Column{
+            Text(text = titulo, fontSize = 16.sp, fontWeight =  FontWeight.Bold)
+            Text(text = detalle, fontSize = 14.sp)
+        }
+    }
 }
