@@ -3,10 +3,12 @@ package com.revup.features.seguimiento.presentation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Scaffold
@@ -40,33 +42,59 @@ fun SeguimientoScreen(
     ) {innerPadding -> Column(
         modifier = Modifier.consumeWindowInsets(innerPadding)
             .padding(innerPadding)
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            .fillMaxSize()
+            .padding(20.dp),
         verticalArrangement = Arrangement.SpaceBetween
     )  {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)) {
 
             //Cabecera: esc,info.coche y estado.coche
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ){
-                Button(onClick = { }) { Text("<")}
-                Column{
-                    Text(text = "COCHE", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                    Text(text = "KM - TALLER", fontSize = 12.sp)
+                Button(onClick = { }) { Text("<", fontSize = 18.sp, fontWeight = FontWeight.Bold)}
+                Spacer(modifier = Modifier.width(12.dp))
+                Column(modifier = Modifier.weight(1f)){
+                    Text(text = "Renault Clio 3", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text(text = "4821KM - TALLER Hermano Ruiz", fontSize = 12.sp)
                 }
                 Card {
-                    Text(text = "ESTADO DE LA REPARACION", fontSize = 12.sp, modifier = Modifier.padding(16.dp))
+                    Text(text = "En reparacion", fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp))
+                }
+            }
+            Card(modifier = Modifier.fillMaxWidth()){
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ){
+                    Button(onClick = {}, modifier = Modifier.weight(1f)) {
+                        Text("Estado", fontWeight = FontWeight.Bold)
+                    }
+                    Button(onClick = { },modifier = Modifier.weight(1f)) {
+                        Text("Chat", fontWeight = FontWeight.Bold)
+                    }
                 }
             }
             //Pasos de la reparacion
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                PasoSeguimiento("✓","TITULO SEG","DETALLE SEG")
-                PasoSeguimiento("✓","TITULO SEG","DETALLE SEG")
-                PasoSeguimiento("✓","TITULO SEG","DETALLE SEG")
-                PasoSeguimiento("✓","TITULO SEG","DETALLE SEG")
+                PasoSeguimiento("✓", "Coche recibido", "Recibido en el taller · Lun 5 oct · 09:12")
+                PasoSeguimiento("✓", "Revisión completada", "Discos y pastillas al límite · Lun 5 oct · 12:40")
+                PasoSeguimiento("✓", "Presupuesto aceptado", "186,40 € · aceptado desde la app · 13:05")
+                PasoSeguimiento("✓", "Piezas pedidas", "Pastillas y discos delanteros · Mar 6 oct")
+
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically){
+                    IconoPaso("🔧")
+                    Card(modifier = Modifier.weight(1f)) {
+                        Column(modifier = Modifier.padding(12.dp)) {
+                            Text(text = "En reparación", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                            Text(text = "Cambio de pastillas y discos · Fin previsto hoy, 18:00", fontSize = 14.sp)
+                        }
+                    }
+                }
+                PasoSeguimiento("⚑", "Listo para recoger", "Te avisaremos por aquí")
             }
         }
         Button(
@@ -77,6 +105,19 @@ fun SeguimientoScreen(
 }
 
 @Composable
+fun IconoPaso(
+    icono: String
+){
+    Card {
+        Text(
+            text = icono,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(horizontal = 8.dp,vertical = 4.dp)
+        )
+    }
+}
+@Composable
 fun PasoSeguimiento(
     icono: String,
     titulo: String,
@@ -86,7 +127,7 @@ fun PasoSeguimiento(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = icono, fontSize = 16.sp)
+        IconoPaso(icono)
         Column{
             Text(text = titulo, fontSize = 16.sp, fontWeight =  FontWeight.Bold)
             Text(text = detalle, fontSize = 14.sp)
