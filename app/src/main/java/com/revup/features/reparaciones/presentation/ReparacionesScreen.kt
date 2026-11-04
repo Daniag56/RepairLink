@@ -21,7 +21,7 @@ fun ReparacionesScreen(
         modifier = modifier.fillMaxSize()
     ) {
 
-        // CONTENIDO DE LA PANTALLA
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
