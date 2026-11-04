@@ -6,12 +6,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavHostController
 import androidx.compose.ui.Modifier
-import com.revup.features.aceptarcoche.presentation.AceptarCocheScreen
 import com.revup.features.auth.presentation.LoginScreen
 import com.revup.features.fichataller.presentation.FichaTallerScreen
 import com.revup.features.home.presentation.HomeScreen
 import com.revup.features.miscoches.presentation.MisCochesScreen
 import com.revup.features.panel.presentation.PanelScreen
+import com.revup.features.talleres.presentation.TalleresScreen
 import com.revup.features.reparaciones.presentation.ReparacionesScreen
 
 @Composable
@@ -33,16 +33,36 @@ fun AppNavHost(
         }
 
         composable(Routes.Home.route) {
-            PanelScreen(
-                onAceptarCoche = {
+            HomeScreen(
+                onTalleres = {
+                    navController.navigate(Routes.Talleres.route)
+                },
+                onMisCoches = {
                     navController.navigate(Routes.Reparaciones.route)
+                },
+                onPerfil = {
                 }
             )
         }
-        composable(Routes.Reparaciones.route){
-            AceptarCocheScreen(
-                onVolver = {
-                    navController.popBackStack()
+        composable(Routes.Reparaciones.route) {
+            ReparacionesScreen(
+                onTalleres = {
+                    navController.navigate(Routes.Talleres.route)
+                },
+                onMisCoches = {
+                },
+                onPerfil = {
+                }
+            )
+        }
+        composable(Routes.Talleres.route) {
+            TalleresScreen(
+                onTalleres = {
+                },
+                onMisCoches = {
+                    navController.navigate(Routes.Reparaciones.route)
+                },
+                onPerfil = {
                 }
             )
         }

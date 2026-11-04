@@ -17,4 +17,9 @@ sealed class Routes (val route: String) {
 
     @Serializable
     object FichaTaller : Routes("ficha_taller")
+    @Serializable
+    object Talleres : Routes("talleres")
+
+    @Serializable
+    object Perfil : Routes("perfil")
 }
