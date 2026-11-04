@@ -25,6 +25,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,14 +34,44 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.revup.R
+import com.revup.core.ui.theme.RepairLinkAndroidTheme
 import com.revup.core.ui.theme.RepairLinkColors
+
+@Preview(showBackground = true)
+@Composable
+fun MisCochesScreenPreview() {
+    RepairLinkAndroidTheme {
+        val viewModel = androidx.lifecycle.viewmodel.compose.viewModel<MisCochesViewModel>(
+            factory = object : androidx.lifecycle.ViewModelProvider.Factory {
+                override fun <T : androidx.lifecycle.ViewModel> create(
+                    modelClass: Class<T>
+                ): T {
+                    return MisCochesViewModel() as T
+                }
+            }
+        )
+
+        MisCochesScreen(
+            onTalleres = {},
+            onMisCoches = {},
+            onPerfil = {},
+            onAnadirCoche = {},
+            onVerTaller = {},
+            viewModel = viewModel
+        )
+    }
+}
 
 @Composable
 fun MisCochesScreen(
+    onTalleres: () -> Unit,
+    onMisCoches: () -> Unit,
+    onPerfil: () -> Unit,
     onAnadirCoche: () -> Unit,
     onVerTaller: () -> Unit,
     modifier: Modifier = Modifier,
@@ -49,13 +81,14 @@ fun MisCochesScreen(
         modifier = modifier
             .fillMaxSize()
             .background(RepairLinkColors.Bg)
-            .padding(horizontal = 20.dp)
             .padding(top = 8.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         // Cabecera: título a la izquierda y botón "Añadir" a la derecha
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -98,12 +131,11 @@ fun MisCochesScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(horizontal = 20.dp)
                 .clip(RoundedCornerShape(12.dp))
                 .clickable { onVerTaller() }
                 .background(RepairLinkColors.SuccessSoft)
-                .padding(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(12.dp)
         ) {
             Text(
                 text = "✓",
@@ -121,12 +153,40 @@ fun MisCochesScreen(
         // Lista de coches
         LazyColumn(
             modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(14.dp),
-            contentPadding = PaddingValues(bottom = 14.dp)
+            contentPadding = PaddingValues(
+                start = 20.dp,
+                end = 20.dp,
+                bottom = 14.dp
+            ),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             items(viewModel.coches, key = { it.id }) { coche ->
                 TarjetaCoche(coche = coche)
             }
+        }
+        NavigationBar(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            NavigationBarItem(
+                selected = false,
+                onClick = { onTalleres() },
+                icon = { Text("🔧") },
+                label = { Text("Talleres") }
+            )
+
+            NavigationBarItem(
+                selected = true,
+                onClick = { onMisCoches() },
+                icon = { Text("🚗") },
+                label = { Text("Mis coches") }
+            )
+
+            NavigationBarItem(
+                selected = false,
+                onClick = { onPerfil() },
+                icon = { Text("👤") },
+                label = { Text("Perfil") }
+            )
         }
     }
 }
@@ -272,5 +332,8 @@ fun TarjetaCoche(
                 }
             }
         }
+
     }
 }
+
+

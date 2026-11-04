@@ -31,11 +31,38 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.revup.R
+import com.revup.core.ui.theme.RepairLinkAndroidTheme
 import com.revup.core.ui.theme.RepairLinkColors
+import com.revup.features.auth.presentation.LoginScreen
+import com.revup.features.reparaciones.presentation.ReparacionesScreen
+
+//PARA QUE SE VEA BIEN QUE ESTABA DANDO ERROR DE LA MANERA NORMAL
+@Preview(showBackground = true)
+@Composable
+fun FichaTallerScreenPreview() {
+    RepairLinkAndroidTheme {
+        val viewModel = androidx.lifecycle.viewmodel.compose.viewModel<FichaTallerViewModel>(
+            factory = object : androidx.lifecycle.ViewModelProvider.Factory {
+                override fun <T : androidx.lifecycle.ViewModel> create(
+                    modelClass: Class<T>
+                ): T {
+                    return FichaTallerViewModel() as T
+                }
+            }
+        )
+
+        FichaTallerScreen(
+            onVolver = {},
+            onVerHoras = {},
+            viewModel = viewModel
+        )
+    }
+}
 
 @Composable
 fun FichaTallerScreen(

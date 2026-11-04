@@ -7,6 +7,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.revup.features.reparaciones.presentation.ReparacionesScreen
+
+
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenPreview() {
+    HomeScreen(
+        onTalleres = {},
+        onMisCoches = {},
+        onPerfil = {}
+    )
+}
 
 @Composable
 fun HomeScreen(

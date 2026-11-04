@@ -9,6 +9,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.revup.core.ui.theme.RepairLinkAndroidTheme
 
 @Composable
 fun TalleresScreen(
@@ -201,9 +202,11 @@ fun TalleresScreen(
 @Preview(showBackground = true)
 @Composable
 fun TalleresScreenPreview() {
-    TalleresScreen(
-        onTalleres = {},
-        onMisCoches = {},
-        onPerfil = {}
-    )
+    RepairLinkAndroidTheme {
+        TalleresScreen(
+            onTalleres = {},
+            onMisCoches = {},
+            onPerfil = {}
+        )
+    }
 }

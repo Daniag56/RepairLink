@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.revup.core.ui.theme.RepairLinkAndroidTheme
 
 @Composable
 fun ReparacionesScreen(
@@ -147,9 +148,11 @@ fun ReparacionesScreen(
 @Preview(showBackground = true)
 @Composable
 fun ReparacionesScreenPreview() {
-    ReparacionesScreen(
-        onTalleres = {},
-        onMisCoches = {},
-        onPerfil = {}
-    )
+    RepairLinkAndroidTheme {
+        ReparacionesScreen(
+            onTalleres = {},
+            onMisCoches = {},
+            onPerfil = {}
+        )
+    }
 }

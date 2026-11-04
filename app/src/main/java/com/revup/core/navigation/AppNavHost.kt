@@ -10,7 +10,6 @@ import com.revup.features.auth.presentation.LoginScreen
 import com.revup.features.fichataller.presentation.FichaTallerScreen
 import com.revup.features.home.presentation.HomeScreen
 import com.revup.features.miscoches.presentation.MisCochesScreen
-import com.revup.features.panel.presentation.PanelScreen
 import com.revup.features.talleres.presentation.TalleresScreen
 import com.revup.features.reparaciones.presentation.ReparacionesScreen
 
@@ -69,10 +68,18 @@ fun AppNavHost(
 
         composable(Routes.MisCoches.route) {
             MisCochesScreen(
+                onTalleres = {
+                    navController.navigate(Routes.Talleres.route)
+                },
+                onMisCoches = {
+                },
+                onPerfil = {
+                },
                 onAnadirCoche = { },
                 onVerTaller = {
                     navController.navigate(Routes.FichaTaller.route)
                 }
+
             )
         }
 
