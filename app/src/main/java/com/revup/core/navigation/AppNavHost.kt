@@ -38,7 +38,6 @@ fun AppNavHost(
                     navController.navigate(Routes.Reparaciones.route)
                 },
                 onPerfil = {
-                    navController.navigate(Routes.Perfil.route)
                 }
             )
         }
@@ -50,7 +49,6 @@ fun AppNavHost(
                 onMisCoches = {
                 },
                 onPerfil = {
-                    navController.navigate(Routes.Perfil.route)
                 }
             )
         }
@@ -62,7 +60,6 @@ fun AppNavHost(
                     navController.navigate(Routes.Reparaciones.route)
                 },
                 onPerfil = {
-                    navController.navigate(Routes.Perfil.route)
                 }
             )
         }
