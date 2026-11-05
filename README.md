@@ -1,4 +1,4 @@
-# RepairLink · App del taller
+# RepairLink · App Android
 
 ![Kotlin](https://img.shields.io/badge/Kotlin-2.4-7F52FF?logo=kotlin&logoColor=white)
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-Material%203-173F4F?logo=jetpackcompose&logoColor=white)
@@ -8,27 +8,58 @@
 
 **RepairLink** conecta **talleres mecánicos** con sus **clientes**. El cliente busca taller, pide cita y sigue en todo momento el estado de su coche. El taller gestiona sus citas y los coches que tiene dentro, y va marcando en qué punto está cada reparación.
 
-Este repositorio contiene la **app Android para el taller**. Los clientes usan una web en Angular, y las dos aplicaciones trabajan contra la misma API.
+Este repositorio contiene la **app Android**. Ahora mismo tiene sobre todo las pantallas del **cliente** (sus coches, buscar taller, calendario del taller y seguimiento de la reparación) y las primeras del **taller** (panel y aceptar coche). Todas las aplicaciones trabajan contra la misma API.
 
 ```
-Web cliente (Angular) ─┐
-                       ├──► API REST/JSON ──► ORM ──► PostgreSQL
-App taller (Kotlin) ───┘
+Web (Angular) ─────┐
+                   ├──► API REST/JSON ──► ORM ──► PostgreSQL
+App Android ───────┘
 ```
 
 Proyecto Intermodular de 2º de DAM.
 
 ---
 
-## Qué puede hacer el taller
+## Pantallas
 
-| Pantalla | Descripción | Estado |
+Por ahora todas las pantallas son **solo interfaz**: los datos son de ejemplo y están escritos en los ViewModels, todavía sin API ni base de datos.
+
+### Cliente
+
+| Pantalla | Qué hace | Estado |
 |---|---|---|
-| Login | Acceso del taller a la app | ✅ Interfaz hecha |
-| Panel | Citas de hoy, coches en el taller y contadores (citas, en taller, por aceptar) | ✅ Interfaz hecha |
-| Aceptar coche | Aceptar el coche de un cliente y generar un código de 6 caracteres para vincularlo | ✅ Interfaz hecha |
-| Estado de la reparación | Ir marcando cada paso de la reparación; el cliente lo ve en su línea temporal | 🔜 Pendiente |
-| Chat con el cliente | Mensajes entre taller y cliente sobre cada coche | 🔜 Pendiente |
+| Bienvenida (`LoginScreen`) | Logo, lema y botón *Iniciar sesión*. Es la pantalla de inicio | ✅ Enlazada |
+| Inicio de sesión (`InicioSesionScreen`) | Correo, contraseña y enlace a *Regístrate* | 🟡 Hecha, falta enlazarla |
+| Mis coches | Lista de coches del cliente: taller, estado (*En reparación*, *En revisión*, *Listo para recoger*) y progreso de la reparación (paso 5/6) | ✅ Enlazada |
+| Ficha del taller | Datos del taller (valoración, distancia, horario) y calendario del mes con días libres, con pocas horas o completos | ✅ Enlazada (*Ver horas* pendiente) |
+| Talleres | Buscador, filtros (*Todos*, *Mecánica*, *Neumáticos*…) y talleres cercanos con su próxima hora libre | 🟡 En la navegación, aún no se llega desde el inicio |
+| Mis reparaciones | Cita solicitada y coche en el taller con su paso actual | 🟡 En la navegación, aún no se llega desde el inicio |
+| Seguimiento | Línea temporal con los pasos de la reparación, pestañas *Estado* / *Chat* y botón *Escribir al taller* | 🟡 Hecha, falta enlazarla |
+
+### Taller
+
+| Pantalla | Qué hace | Estado |
+|---|---|---|
+| Panel | Nombre del taller, citas de hoy y botón *Aceptar coche* | 🟡 Hecha, falta enlazarla |
+| Aceptar coche | Genera un código de 6 caracteres para que el cliente vincule su coche | 🟡 Hecha, falta enlazarla |
+
+### Pendiente
+
+- Perfil (la ruta ya existe en `Routes`, la pantalla no).
+- Chat entre taller y cliente.
+- Pedir cita eligiendo hora (*Ver horas*) y añadir coche (*+ Añadir*).
+- Que el taller vaya marcando los pasos de la reparación.
+- Conectar con la API, Room y StateFlow.
+
+### Navegación actual
+
+```
+Bienvenida ──► Mis coches ──► Ficha del taller
+                                  │
+                                  └── ‹ Volver
+
+Home ──► Mis reparaciones ◄──► Talleres      (barra inferior: Talleres · Mis coches · Perfil)
+```
 
 ---
 
@@ -38,14 +69,15 @@ Proyecto Intermodular de 2º de DAM.
 |---|---|
 | Lenguaje | Kotlin 2.4.21 |
 | Interfaz | Jetpack Compose (BOM 2026.09.00) + Material 3 |
-| Navegación | Navigation Compose 2.10.2 + kotlinx.serialization |
-| Inyección de dependencias | Hilt 2.60.1 (con KSP) + hilt-navigation-compose |
-| Estado | ViewModel (`@HiltViewModel`); StateFlow *(pendiente)* |
+| Navegación | Navigation Compose 2.10.2 + kotlinx.serialization 1.12.0 |
+| Inyección de dependencias | Hilt 2.60.1 (con KSP 2.3.12) + hilt-navigation-compose 1.4.0 |
+| Estado | ViewModel (`@HiltViewModel`) con datos de ejemplo; StateFlow *(pendiente)* |
 | Persistencia local | Room *(pendiente)* |
 | Red | Retrofit o Ktor contra la API propia *(pendiente)* |
 | Preferencias | DataStore *(pendiente)* |
 
-- `minSdk 26` (Android 8.0) · `targetSdk 37`
+- Android Gradle Plugin 9.4.1 · Java 11
+- `minSdk 26` (Android 8.0) · `targetSdk 37` · `compileSdk 37`
 - Paquete: `com.revup`
 
 ---
@@ -54,22 +86,30 @@ Proyecto Intermodular de 2º de DAM.
 
 ```
 app/src/main/java/com/revup/
-├── MainApplication.kt          @HiltAndroidApp
-├── MainActivity.kt             @AndroidEntryPoint
+├── MainApplication.kt              @HiltAndroidApp
+├── MainActivity.kt                 @AndroidEntryPoint, carga AppNavHost
 ├── core/
-│   ├── data/                   local (Room), remote (API), repository
-│   ├── di/                     DatabaseModule, NetworkModule
-│   ├── navigation/             AppNavHost, Routes
-│   └── ui/theme/               colores, tipografía y tema
+│   ├── di/                         DatabaseModule, NetworkModule (vacíos de momento)
+│   ├── navigation/                 AppNavHost, Routes
+│   └── ui/theme/                   colores, tipografía y tema
 └── features/
-    ├── auth/presentation/      LoginScreen + LoginViewModel
-    ├── panel/presentation/     PanelScreen + PanelViewModel
-    └── aceptarcoche/presentation/  AceptarCocheScreen + AceptarCocheViewModel
+    ├── auth/                       LoginScreen (bienvenida)
+    ├── iniciosesion/               InicioSesionScreen (correo y contraseña)
+    ├── home/                       HomeScreen (menú provisional)
+    ├── miscoches/                  MisCochesScreen + CocheUi
+    ├── fichataller/                FichaTallerScreen + DiaUi (calendario)
+    ├── talleres/                   TalleresScreen
+    ├── reparaciones/               ReparacionesScreen
+    ├── seguimiento/                SeguimientoScreen
+    ├── panel/                      PanelScreen (taller)
+    └── aceptarcoche/               AceptarCocheScreen (taller)
 ```
 
-Cada funcionalidad tiene su propio paquete dentro de `features/` con su pantalla y su `@HiltViewModel`. Lo que se comparte entre funcionalidades (navegación, tema, inyección de dependencias, datos) va en `core/`.
+Cada funcionalidad tiene su propio paquete dentro de `features/<nombre>/presentation/`, con su pantalla y su `@HiltViewModel`. Lo que se comparte entre funcionalidades (navegación, tema, inyección de dependencias y, más adelante, datos) va en `core/`.
 
-Las pantallas no conocen el `NavController`: reciben callbacks (`onAceptarCoche`, `onVolver`…) y es `AppNavHost` quien decide a dónde se navega.
+Los datos que se pintan en pantalla tienen su propia clase `…Ui` (`CocheUi`, `DiaUi`) y los da el ViewModel; así, cuando llegue la API, solo cambia el ViewModel y no la pantalla.
+
+Las pantallas no conocen el `NavController`: reciben callbacks (`onVerTaller`, `onVolver`, `onTalleres`…) y es `AppNavHost` quien decide a dónde se navega.
 
 ---
 
