@@ -52,15 +52,24 @@ fun InicioSesionScreen(
             Card{
                 Text(text = "", modifier = Modifier.padding(30.dp))
             }
-
+            //Cabecera inicio Sesion
             Column{
                 Text(text = "Hola de nuevo", fontSize = 26.sp, fontWeight = FontWeight.Bold)
                 Text(text = "Inicia sesion para ver tus coches y tus citas", fontSize = 14.sp)
             }
-
+            //Seccion de correo
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(text = "")
+                Text(text = "Correo electronico", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                Card(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = "Correo@correo.com",
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
             }
+
+
         }
     }}
 }
