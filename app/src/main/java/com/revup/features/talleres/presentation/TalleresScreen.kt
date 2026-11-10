@@ -9,6 +9,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.revup.core.ui.components.BarraInferior
 
 @Composable
 fun TalleresScreen(
@@ -173,28 +174,12 @@ fun TalleresScreen(
         Spacer(modifier = Modifier.weight(1f))
 
 
-        NavigationBar {
-            NavigationBarItem(
-                selected = true,
-                onClick = { onTalleres() },
-                icon = { Text("🔧") },
-                label = { Text("Talleres") }
-            )
-
-            NavigationBarItem(
-                selected = false,
-                onClick = { onMisCoches() },
-                icon = { Text("🚗") },
-                label = { Text("Mis coches") }
-            )
-
-            NavigationBarItem(
-                selected = false,
-                onClick = { onPerfil() },
-                icon = { Text("👤") },
-                label = { Text("Perfil") }
-            )
-        }
+        BarraInferior(
+            seleccionada = "Talleres",
+            onTalleres = onTalleres,
+            onMisCoches = onMisCoches,
+            onPerfil = onPerfil
+        )
     }
 }
 

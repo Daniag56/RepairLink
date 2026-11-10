@@ -7,6 +7,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavHostController
 import androidx.compose.ui.Modifier
 import com.revup.features.auth.presentation.LoginScreen
+import com.revup.features.citasolicitada.presentation.CitaSolicitadaScreen
+import com.revup.features.elegirdia.presentation.ElegirDiaScreen
+import com.revup.features.elegirhora.presentation.ElegirHoraScreen
 import com.revup.features.fichataller.presentation.FichaTallerScreen
 import com.revup.features.home.presentation.HomeScreen
 import com.revup.features.miscoches.presentation.MisCochesScreen
@@ -60,7 +63,7 @@ fun AppNavHost(
                 onTalleres = {
                 },
                 onMisCoches = {
-                    navController.navigate(Routes.Reparaciones.route)
+                    navController.navigate(Routes.MisCoches.route)
                 },
                 onPerfil = {
                 }
@@ -72,6 +75,11 @@ fun AppNavHost(
                 onAnadirCoche = { },
                 onVerTaller = {
                     navController.navigate(Routes.FichaTaller.route)
+                },
+                onTalleres = {
+                    navController.navigate(Routes.Talleres.route)
+                },
+                onPerfil = {
                 }
             )
         }
@@ -81,7 +89,40 @@ fun AppNavHost(
                 onVolver = {
                     navController.popBackStack()
                 },
-                onVerHoras = { }
+                onReservarCita = {
+                    navController.navigate(Routes.ElegirDia.route)
+                }
+            )
+        }
+
+        composable(Routes.ElegirDia.route) {
+            ElegirDiaScreen(
+                onVolver = {
+                    navController.popBackStack()
+                },
+                onVerHoras = {
+                    navController.navigate(Routes.ElegirHora.route)
+                }
+            )
+        }
+
+        composable(Routes.ElegirHora.route) {
+            ElegirHoraScreen(
+                onVolver = {
+                    navController.popBackStack()
+                },
+                onSolicitarCita = {
+                    navController.navigate(Routes.CitaSolicitada.route)
+                }
+            )
+        }
+
+        composable(Routes.CitaSolicitada.route) {
+            CitaSolicitadaScreen(
+                onVerMisCitas = { },
+                onVolverInicio = {
+                    navController.navigate(Routes.MisCoches.route)
+                }
             )
         }
     }

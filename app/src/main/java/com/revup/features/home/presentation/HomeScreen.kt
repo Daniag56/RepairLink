@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.revup.core.ui.theme.RepairLinkAndroidTheme
 
 @Composable
 fun HomeScreen(
@@ -51,5 +53,13 @@ fun HomeScreen(
                 label = { Text("Perfil") }
             )
         }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 390, heightDp = 844)
+@Composable
+fun HomeScreenPreview() {
+    RepairLinkAndroidTheme {
+        HomeScreen(onTalleres = {}, onMisCoches = {}, onPerfil = {})
     }
 }
