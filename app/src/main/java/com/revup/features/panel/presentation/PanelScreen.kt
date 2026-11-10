@@ -10,15 +10,36 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.revup.core.ui.theme.RepairLinkAndroidTheme
 
 @Composable
 fun PanelScreen(
     onAceptarCoche: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: PanelViewModel = hiltViewModel()
+) {
+    PanelContent(
+        onAceptarCoche = onAceptarCoche,
+        modifier = modifier
+    )
+}
+
+@Preview(showBackground = true, widthDp = 390, heightDp = 844)
+@Composable
+fun PanelScreenPreview() {
+    RepairLinkAndroidTheme {
+        PanelContent(onAceptarCoche = {})
+    }
+}
+
+@Composable
+fun PanelContent(
+    onAceptarCoche: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.padding(20.dp),
