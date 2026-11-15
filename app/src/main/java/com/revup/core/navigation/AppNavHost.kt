@@ -14,6 +14,7 @@ import com.revup.features.fichataller.presentation.FichaTallerScreen
 import com.revup.features.home.presentation.HomeScreen
 import com.revup.features.miscoches.presentation.MisCochesScreen
 import com.revup.features.panel.presentation.PanelScreen
+import com.revup.features.seguimiento.presentation.SeguimientoScreen
 import com.revup.features.talleres.presentation.TalleresScreen
 import com.revup.features.reparaciones.presentation.ReparacionesScreen
 
@@ -30,7 +31,7 @@ fun AppNavHost(
         composable(Routes.Login.route) {
             LoginScreen(
                 onAcceder = {
-                    navController.navigate(Routes.MisCoches.route)
+                    navController.navigate(Routes.Talleres.route)
                 }
             )
         }
@@ -60,6 +61,9 @@ fun AppNavHost(
         }
         composable(Routes.Talleres.route) {
             TalleresScreen(
+                onVerTaller = {
+                    navController.navigate(Routes.FichaTaller.route)
+                },
                 onTalleres = {
                 },
                 onMisCoches = {
@@ -73,8 +77,8 @@ fun AppNavHost(
         composable(Routes.MisCoches.route) {
             MisCochesScreen(
                 onAnadirCoche = { },
-                onVerTaller = {
-                    navController.navigate(Routes.FichaTaller.route)
+                onVerCoche = {
+                    navController.navigate(Routes.Seguimiento.route)
                 },
                 onTalleres = {
                     navController.navigate(Routes.Talleres.route)
@@ -121,7 +125,15 @@ fun AppNavHost(
             CitaSolicitadaScreen(
                 onVerMisCitas = { },
                 onVolverInicio = {
-                    navController.navigate(Routes.MisCoches.route)
+                    navController.navigate(Routes.Talleres.route)
+                }
+            )
+        }
+
+        composable(Routes.Seguimiento.route) {
+            SeguimientoScreen(
+                onVolver = {
+                    navController.popBackStack()
                 }
             )
         }

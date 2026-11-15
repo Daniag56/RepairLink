@@ -1,5 +1,8 @@
 package com.revup.features.seguimiento.presentation
 
+import androidx.compose.material3.Icon
+import androidx.compose.ui.res.painterResource
+import com.revup.R
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,12 +30,13 @@ import com.revup.core.ui.theme.RepairLinkAndroidTheme
 @Composable
 fun SeguimientoScreenPreview(){
     RepairLinkAndroidTheme() {
-        SeguimientoScreen()
+        SeguimientoScreen(onVolver = {})
     }
 }
 
 @Composable
 fun SeguimientoScreen(
+    onVolver: () -> Unit,
     modifier: Modifier = Modifier
 ){
     val viewModel = remember { SeguimientoViewModel() }
@@ -49,12 +53,11 @@ fun SeguimientoScreen(
         Column(modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)) {
 
-            //Cabecera: esc,info.coche y estado.coche
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ){
-                Button(onClick = { }) { Text("<", fontSize = 18.sp, fontWeight = FontWeight.Bold)}
+                Button(onClick = { onVolver() }) { Icon(painter = painterResource(R.drawable.ic_left), contentDescription = null)}
                 Spacer(modifier = Modifier.width(12.dp))
                 Column(modifier = Modifier.weight(1f)){
                     Text(text = "Renault Clio 3", fontSize = 20.sp, fontWeight = FontWeight.Bold)
@@ -77,7 +80,6 @@ fun SeguimientoScreen(
                     }
                 }
             }
-            //Pasos de la reparacion
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 PasoSeguimiento("✓", "Coche recibido", "Recibido en el taller · Lun 5 oct · 09:12")
                 PasoSeguimiento("✓", "Revisión completada", "Discos y pastillas al límite · Lun 5 oct · 12:40")

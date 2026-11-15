@@ -1,5 +1,8 @@
 package com.revup.features.elegirdia.presentation
 
+import androidx.compose.material3.Icon
+import androidx.compose.ui.res.painterResource
+import com.revup.R
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -85,7 +88,7 @@ fun ElegirDiaContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Button(onClick = { onVolver() }) {
-                Text("<", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Icon(painter = painterResource(R.drawable.ic_left), contentDescription = null)
             }
             Text(text = "Talleres Hermanos Ruiz", fontSize = 18.sp, fontWeight = FontWeight.Bold)
         }

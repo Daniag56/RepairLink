@@ -1,5 +1,7 @@
 package com.revup.features.talleres.presentation
 
+import androidx.compose.ui.res.painterResource
+import com.revup.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -13,6 +15,7 @@ import com.revup.core.ui.components.BarraInferior
 
 @Composable
 fun TalleresScreen(
+    onVerTaller: () -> Unit,
     onTalleres: () -> Unit,
     onMisCoches: () -> Unit,
     onPerfil: () -> Unit,
@@ -22,7 +25,6 @@ fun TalleresScreen(
         modifier = modifier.fillMaxSize()
     ) {
 
-        // CONTENIDO DE LA PANTALLA
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -36,7 +38,6 @@ fun TalleresScreen(
                 fontWeight = FontWeight.Bold
             )
 
-            // BUSCADOR
             Card(
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -47,7 +48,6 @@ fun TalleresScreen(
                 )
             }
 
-            // FILTROS
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -85,7 +85,11 @@ fun TalleresScreen(
                             fontWeight = FontWeight.Bold
                         )
 
-                        Text("🔧", fontSize = 26.sp)
+                        Icon(
+                            painter = painterResource(R.drawable.ic_wrench),
+                            contentDescription = null,
+                            modifier = Modifier.size(26.dp)
+                        )
                     }
 
                     Text(
@@ -114,7 +118,7 @@ fun TalleresScreen(
                             fontSize = 12.sp
                         )
 
-                        Button(onClick = {}) {
+                        Button(onClick = { onVerTaller() }) {
                             Text(
                                 text = "Ver calendario",
                                 fontSize = 11.sp
@@ -135,9 +139,10 @@ fun TalleresScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
 
-                    Text(
-                        text = "🔧",
-                        fontSize = 28.sp
+                    Icon(
+                        painter = painterResource(R.drawable.ic_wrench),
+                        contentDescription = null,
+                        modifier = Modifier.size(28.dp)
                     )
 
                     Spacer(modifier = Modifier.width(12.dp))
@@ -163,10 +168,12 @@ fun TalleresScreen(
                         )
                     }
 
-                    Text(
-                        text = "➜",
-                        fontSize = 24.sp
-                    )
+                    Button(onClick = { onVerTaller() }) {
+                        Text(
+                            text = "➜",
+                            fontSize = 24.sp
+                        )
+                    }
                 }
             }
         }
@@ -187,6 +194,7 @@ fun TalleresScreen(
 @Composable
 fun TalleresScreenPreview() {
     TalleresScreen(
+        onVerTaller = {},
         onTalleres = {},
         onMisCoches = {},
         onPerfil = {}

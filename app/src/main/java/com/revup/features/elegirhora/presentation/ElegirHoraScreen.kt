@@ -1,5 +1,8 @@
 package com.revup.features.elegirhora.presentation
 
+import androidx.compose.material3.Icon
+import androidx.compose.ui.res.painterResource
+import com.revup.R
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -90,7 +93,7 @@ fun ElegirHoraContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Button(onClick = { onVolver() }) {
-                Text("<", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Icon(painter = painterResource(R.drawable.ic_left), contentDescription = null)
             }
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = "Jueves 8 de octubre", fontSize = 20.sp, fontWeight = FontWeight.Bold)

@@ -1,5 +1,9 @@
 package com.revup.features.fichataller.presentation
 
+import androidx.compose.material3.Icon
+import androidx.compose.ui.res.painterResource
+import com.revup.R
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -67,7 +71,7 @@ fun FichaTallerContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Button(onClick = { onVolver() }) {
-                Text("<", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Icon(painter = painterResource(R.drawable.ic_left), contentDescription = null)
             }
             OutlinedButton(onClick = {}) {
                 Text("☆", fontSize = 18.sp)
@@ -78,7 +82,11 @@ fun FichaTallerContent(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "🔧", fontSize = 32.sp)
+            Icon(
+                painter = painterResource(R.drawable.ic_wrench),
+                contentDescription = null,
+                modifier = Modifier.size(32.dp)
+            )
             Column {
                 Text(text = nombre, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                 Text(text = "Abierto · cierra a las 19:00", fontSize = 13.sp)

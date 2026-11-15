@@ -22,21 +22,22 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = RepairLinkColors.OrangePrimary,
+    primary = Color(0xFF173F4F),
     onPrimary = RepairLinkColors.White,
-    secondary = RepairLinkColors.ConnectionBlue,
+    secondary = RepairLinkColors.Secondary,
     onSecondary = RepairLinkColors.White,
-    background = RepairLinkColors.PetrolBlue,
-    onBackground = RepairLinkColors.White,
-    surface = Color(0xFF1A4A5E),
-    onSurface = RepairLinkColors.White,
+    background = RepairLinkColors.Bg,
+    onBackground = RepairLinkColors.Ink,
+    surface = RepairLinkColors.White,
+    onSurface = RepairLinkColors.Ink,
+    surfaceContainerHighest = RepairLinkColors.White,
     error = Color(0xFFB00020),
     onError = RepairLinkColors.White,
 )
 
 @Composable
 fun RepairLinkAndroidTheme(
-    darkTheme: Boolean = true,
+    darkTheme: Boolean = false,
     content: @Composable () -> Unit
 ) {
     MaterialTheme(

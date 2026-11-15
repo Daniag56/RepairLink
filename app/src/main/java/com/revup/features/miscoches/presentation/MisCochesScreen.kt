@@ -1,5 +1,10 @@
 package com.revup.features.miscoches.presentation
 
+import androidx.compose.material3.Icon
+import androidx.compose.ui.res.painterResource
+import com.revup.R
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,7 +30,7 @@ import com.revup.core.ui.theme.RepairLinkAndroidTheme
 @Composable
 fun MisCochesScreen(
     onAnadirCoche: () -> Unit,
-    onVerTaller: () -> Unit,
+    onVerCoche: () -> Unit,
     onTalleres: () -> Unit,
     onPerfil: () -> Unit,
     modifier: Modifier = Modifier,
@@ -34,7 +39,7 @@ fun MisCochesScreen(
     MisCochesContent(
         coches = viewModel.coches,
         onAnadirCoche = onAnadirCoche,
-        onVerTaller = onVerTaller,
+        onVerCoche = onVerCoche,
         onTalleres = onTalleres,
         onPerfil = onPerfil,
         modifier = modifier
@@ -59,7 +64,7 @@ fun MisCochesScreenPreview() {
                 )
             ),
             onAnadirCoche = {},
-            onVerTaller = {},
+            onVerCoche = {},
             onTalleres = {},
             onPerfil = {}
         )
@@ -70,7 +75,7 @@ fun MisCochesScreenPreview() {
 fun MisCochesContent(
     coches: List<CocheUi>,
     onAnadirCoche: () -> Unit,
-    onVerTaller: () -> Unit,
+    onVerCoche: () -> Unit,
     onTalleres: () -> Unit,
     onPerfil: () -> Unit,
     modifier: Modifier = Modifier
@@ -95,7 +100,9 @@ fun MisCochesContent(
                 }
 
                 Button(onClick = { onAnadirCoche() }) {
-                    Text(text = "+ Añadir")
+                    Icon(painter = painterResource(R.drawable.ic_plus), contentDescription = null)
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(text = "Añadir")
                 }
             }
 
@@ -112,12 +119,6 @@ fun MisCochesContent(
                         modifier = Modifier.weight(1f)
                     )
                 }
-                Button(
-                    onClick = { onVerTaller() },
-                    modifier = Modifier.padding(start = 16.dp, bottom = 16.dp)
-                ) {
-                    Text(text = "Ver taller", fontSize = 12.sp)
-                }
             }
 
             LazyColumn(
@@ -125,7 +126,7 @@ fun MisCochesContent(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(coches, key = { it.id }) { coche ->
-                    TarjetaCoche(coche = coche)
+                    TarjetaCoche(coche = coche, onVerEstado = onVerCoche)
                 }
             }
         }
@@ -142,6 +143,7 @@ fun MisCochesContent(
 @Composable
 fun TarjetaCoche(
     coche: CocheUi,
+    onVerEstado: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(modifier = modifier.fillMaxWidth()) {
@@ -154,14 +156,26 @@ fun TarjetaCoche(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
-                    Text(text = "🚗 ${coche.nombre}", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                    Text(text = coche.matricula, fontSize = 12.sp)
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(painter = painterResource(R.drawable.ic_car), contentDescription = null)
+                    Column {
+                        Text(text = coche.nombre, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        Text(text = coche.matricula, fontSize = 12.sp)
+                    }
                 }
                 Text(text = coche.estado, fontSize = 12.sp, fontWeight = FontWeight.Bold)
             }
 
-            Text(text = "🔧 ${coche.taller}", fontSize = 13.sp)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(painter = painterResource(R.drawable.ic_wrench), contentDescription = null)
+                Text(text = coche.taller, fontSize = 13.sp)
+            }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -173,6 +187,10 @@ fun TarjetaCoche(
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold
                 )
+            }
+
+            Button(onClick = { onVerEstado() }) {
+                Text(text = "Ver estado", fontSize = 12.sp)
             }
         }
     }
