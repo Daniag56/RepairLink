@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.revup.core.ui.components.BarraInferior
+import com.revup.core.ui.theme.RepairLinkAndroidTheme
 
 @Composable
 fun TalleresScreen(
@@ -193,10 +194,12 @@ fun TalleresScreen(
 @Preview(showBackground = true)
 @Composable
 fun TalleresScreenPreview() {
-    TalleresScreen(
-        onVerTaller = {},
-        onTalleres = {},
-        onMisCoches = {},
-        onPerfil = {}
-    )
+    RepairLinkAndroidTheme {
+        TalleresScreen(
+            onVerTaller = {},
+            onTalleres = {},
+            onMisCoches = {},
+            onPerfil = {}
+        )
+    }
 }
