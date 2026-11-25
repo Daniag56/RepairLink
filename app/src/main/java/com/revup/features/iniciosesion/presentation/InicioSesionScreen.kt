@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.OutlinedSecureTextField
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -61,7 +63,7 @@ fun InicioSesionScreen(
                 emailState = viewModel.emailTextFieldState,
                 passwordState = viewModel.passwordTextFieldState,
                 isLogginIn = false,
-                errorMessage = null,
+                errorMessage = (uiState as InicioSesionUiState.Error).message,
                 onLoginClick = { viewModel.login() },
                 onRegisterClick = toRegister,
                 onVolver = onVolver
@@ -141,12 +143,14 @@ fun InicioSesionContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
-            label = {Text("Contraseña")},
-            state = passwordState,
+            label = {Text("Correo electronico")},
+            state = emailState,
             modifier = Modifier.fillMaxWidth(),
             enabled = !isLogginIn,
+            lineLimits = TextFieldLineLimits.SingleLine,
             isError = isError
         )
+
         errorMessage?.let {
             Text(
                 text = errorMessage,
