@@ -5,12 +5,14 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.revup.features.auth.data.User
+import com.revup.features.auth.data.remote.exception.CredentialsNotValidException
 import com.revup.features.auth.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 @HiltViewModel
 class InicioSesionViewModel @Inject constructor(
@@ -26,9 +28,13 @@ class InicioSesionViewModel @Inject constructor(
         viewModelScope.launch {
             repository.user.collect { result ->
                 if (result.isSuccess) {
-                    _uiState.value = InicioSesionUiState.Error("Correo o contraseña incorrectos")
-                }else{
-                    _uiState.value = InicioSesionUiState.Initial
+                    _uiState.value = InicioSesionUiState.LoggedIn(user = result.getOrNull()!!)
+                }
+                else{
+                    if (result.exceptionOrNull()!! is CredentialsNotValidException)
+                        _uiState.value = InicioSesionUiState.Error("Correo o contraseña incorrectos")
+                    else
+                        _uiState.value = InicioSesionUiState.Initial
                 }
                 }
             }

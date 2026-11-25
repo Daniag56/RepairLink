@@ -150,6 +150,13 @@ fun InicioSesionContent(
             lineLimits = TextFieldLineLimits.SingleLine,
             isError = isError
         )
+        OutlinedSecureTextField(
+            label = {Text("Contraseña")},
+            state = passwordState,
+            modifier = Modifier.fillMaxWidth(),
+            enabled = !isLogginIn,
+            isError = isError
+        )
 
         errorMessage?.let {
             Text(

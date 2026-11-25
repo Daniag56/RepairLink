@@ -9,6 +9,7 @@ sealed class Routes (val route: String) {
 
     @Serializable
     object Home : Routes("home")
+
     @Serializable
     object Reparaciones : Routes("reparaciones")
 
@@ -36,4 +37,7 @@ sealed class Routes (val route: String) {
 
     @Serializable
     object Perfil : Routes("perfil")
+
+    @Serializable
+    object InicioSesion : Routes("inicio_sesion")
 }
