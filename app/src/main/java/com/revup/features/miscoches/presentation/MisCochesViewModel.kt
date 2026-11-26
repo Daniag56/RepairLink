@@ -3,9 +3,18 @@ package com.revup.features.miscoches.presentation
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class MisCochesViewModel @Inject constructor() : ViewModel() {
+
+    private val _uiState = MutableStateFlow<MisCochesUiState>(MisCochesUiState.Initial)
+
+    val uiState = _uiState.asStateFlow()
 
 
     val coches = listOf(
@@ -42,4 +51,15 @@ class MisCochesViewModel @Inject constructor() : ViewModel() {
             pasosTotales = 6
         )
     )
+
+    sealed class MisCochesUiState {
+        object Initial : MisCochesUiState()
+        object Loading : MisCochesUiState()
+        object Empty : MisCochesUiState()
+
+        data class Success(
+            val coches: List<CocheUi>) : MisCochesUiState()
+
+        data class Error(val message: String) : MisCochesUiState()
+    }
 }
