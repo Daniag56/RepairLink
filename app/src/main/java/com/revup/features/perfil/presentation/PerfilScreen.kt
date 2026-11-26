@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -32,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.revup.R
 import com.revup.core.ui.components.BarraInferior
 import com.revup.core.ui.theme.RepairLinkAndroidTheme
@@ -45,47 +48,27 @@ fun PerfilScreen(
     modifier: Modifier = Modifier,
     viewModel: PerfilViewModel = hiltViewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     PerfilContent(
-        nombre = viewModel.nombre,
-        correo = viewModel.correo,
-        iniciales = viewModel.iniciales,
-        notificaciones = viewModel.notificaciones,
+        uiState = uiState,
         onTalleres = onTalleres,
         onMisCoches = onMisCoches,
         onPerfil = onPerfil,
+        onReintentar = viewModel::cargarPerfil,
         modifier = modifier
     )
 }
 
-@Preview(showBackground = true, widthDp = 390, heightDp = 844)
-@Composable
-fun PerfilScreenPreview() {
-    RepairLinkAndroidTheme {
-        PerfilContent(
-            nombre = "Laura Gómez",
-            correo = "laura.gomez@email.com",
-            iniciales = "LG",
-            notificaciones = 3,
-            onTalleres = {},
-            onMisCoches = {},
-            onPerfil = {}
-        )
-    }
-}
-
 @Composable
 fun PerfilContent(
-    nombre: String,
-    correo: String,
-    iniciales: String,
-    notificaciones: Int,
+    uiState: PerfilUiState,
     onTalleres: () -> Unit,
     onMisCoches: () -> Unit,
     onPerfil: () -> Unit,
+    onReintentar: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var avisosActivos by remember { mutableStateOf(true) }
-
     Scaffold(
         modifier = modifier.fillMaxSize(),
         bottomBar = {
@@ -98,122 +81,215 @@ fun PerfilContent(
         }
     ) { innerPadding ->
 
-        Column(
+        Box(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
                 .padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            contentAlignment = Alignment.Center
         ) {
+            when (uiState) {
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Card(
-                    modifier = Modifier.size(64.dp),
-                    shape = CircleShape
-                ) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
+                PerfilUiState.Initial -> {
+                    Text(
+                        text = "Preparando perfil...",
+                        fontSize = 16.sp
+                    )
+                }
+
+                PerfilUiState.Loading -> {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
+                        CircularProgressIndicator()
+
                         Text(
-                            text = iniciales,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold
+                            text = "Cargando perfil...",
+                            fontSize = 16.sp
                         )
                     }
                 }
 
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                PerfilUiState.Empty -> {
+                    Text(
+                        text = "No hay datos de perfil",
+                        fontSize = 16.sp
+                    )
+                }
+
+                is PerfilUiState.Success -> {
+                    PerfilDatosContent(
+                        nombre = uiState.nombre,
+                        correo = uiState.correo,
+                        iniciales = uiState.iniciales,
+                        notificaciones = uiState.notificaciones
+                    )
+                }
+
+                is PerfilUiState.Error -> {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Text(
+                            text = uiState.message,
+                            fontSize = 16.sp,
+                            color = MaterialTheme.colorScheme.error
+                        )
+
+                        Button(
+                            onClick = onReintentar
+                        ) {
+                            Text("Reintentar")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun PerfilDatosContent(
+    nombre: String,
+    correo: String,
+    iniciales: String,
+    notificaciones: Int
+) {
+    var avisosActivos by remember {
+        mutableStateOf(true)
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Card(
+                modifier = Modifier.size(64.dp),
+                shape = CircleShape
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = nombre,
+                        text = iniciales,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
                     )
-
-                    Text(
-                        text = correo,
-                        fontSize = 13.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
                 }
             }
 
-            Card(
-                modifier = Modifier.fillMaxWidth()
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Column {
-                    FilaPerfil("◷", "Mis citas")
-                    Divider()
-                    FilaPerfil(
-                        titulo = "Mis coches",
-                        iconoResource = R.drawable.ic_car_tab
-                    )
-                    Divider()
-                    FilaPerfil("●", "Notificaciones", notificaciones)
-                    Divider()
-                    FilaPerfil("◇", "Privacidad y seguridad")
-                    Divider()
-                    FilaPerfil("?", "Ayuda")
-                }
+                Text(
+                    text = nombre,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Text(
+                    text = correo,
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
-
-            Card(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Avisos en el móvil",
-                        fontWeight = FontWeight.Medium,
-                        modifier = Modifier.weight(1f)
-                    )
-
-                    Switch(
-                        checked = avisosActivos,
-                        onCheckedChange = { avisosActivos = it },
-                        colors = SwitchDefaults.colors(
-                            checkedTrackColor = RepairLinkColors.Success,
-                            checkedThumbColor = RepairLinkColors.White
-                        )
-                    )
-                }
-            }
-
-            Card(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "↪",
-                        fontSize = 20.sp,
-                        color = MaterialTheme.colorScheme.error
-                    )
-
-                    Text(
-                        text = "Cerrar sesión",
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.weight(1f))
         }
+
+        Card(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column {
+                FilaPerfil("◷", "Mis citas")
+
+                Divider()
+
+                FilaPerfil(
+                    titulo = "Mis coches",
+                    iconoResource = R.drawable.ic_car_tab
+                )
+
+                Divider()
+
+                FilaPerfil(
+                    "●",
+                    "Notificaciones",
+                    notificaciones
+                )
+
+                Divider()
+
+                FilaPerfil("◇", "Privacidad y seguridad")
+
+                Divider()
+
+                FilaPerfil("?", "Ayuda")
+            }
+        }
+
+        Card(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Avisos en el móvil",
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier.weight(1f)
+                )
+
+                Switch(
+                    checked = avisosActivos,
+                    onCheckedChange = {
+                        avisosActivos = it
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedTrackColor = RepairLinkColors.Success,
+                        checkedThumbColor = RepairLinkColors.White
+                    )
+                )
+            }
+        }
+
+        Card(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "↪",
+                    fontSize = 20.sp,
+                    color = MaterialTheme.colorScheme.error
+                )
+
+                Text(
+                    text = "Cerrar sesión",
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        }
+
+        Spacer(
+            modifier = Modifier.weight(1f)
+        )
     }
 }
 
@@ -278,6 +354,85 @@ fun FilaPerfil(
             text = "›",
             fontSize = 24.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+// PREVIEWS
+
+@Preview(showBackground = true, widthDp = 390, heightDp = 844)
+@Composable
+fun PerfilInitialPreview() {
+    RepairLinkAndroidTheme {
+        PerfilContent(
+            uiState = PerfilUiState.Initial,
+            onTalleres = {},
+            onMisCoches = {},
+            onPerfil = {},
+            onReintentar = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 390, heightDp = 844)
+@Composable
+fun PerfilLoadingPreview() {
+    RepairLinkAndroidTheme {
+        PerfilContent(
+            uiState = PerfilUiState.Loading,
+            onTalleres = {},
+            onMisCoches = {},
+            onPerfil = {},
+            onReintentar = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 390, heightDp = 844)
+@Composable
+fun PerfilEmptyPreview() {
+    RepairLinkAndroidTheme {
+        PerfilContent(
+            uiState = PerfilUiState.Empty,
+            onTalleres = {},
+            onMisCoches = {},
+            onPerfil = {},
+            onReintentar = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 390, heightDp = 844)
+@Composable
+fun PerfilSuccessPreview() {
+    RepairLinkAndroidTheme {
+        PerfilContent(
+            uiState = PerfilUiState.Success(
+                nombre = "Laura Gómez",
+                correo = "laura.gomez@email.com",
+                iniciales = "LG",
+                notificaciones = 3
+            ),
+            onTalleres = {},
+            onMisCoches = {},
+            onPerfil = {},
+            onReintentar = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 390, heightDp = 844)
+@Composable
+fun PerfilErrorPreview() {
+    RepairLinkAndroidTheme {
+        PerfilContent(
+            uiState = PerfilUiState.Error(
+                message = "No se ha podido cargar el perfil"
+            ),
+            onTalleres = {},
+            onMisCoches = {},
+            onPerfil = {},
+            onReintentar = {}
         )
     }
 }
