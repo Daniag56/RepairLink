@@ -15,7 +15,7 @@ android {
     defaultConfig {
         applicationId = "com.revup"
         minSdk = 26
-        targetSdk = 37
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
