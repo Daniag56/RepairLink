@@ -35,13 +35,41 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.revup.core.ui.theme.RepairLinkAndroidTheme
 
 @Composable
 fun CrearCuentaScreen(
+    modifier: Modifier = Modifier,
     onVolver: () -> Unit = {},
     onIniciarSesion: () -> Unit = {},
-    modifier: Modifier = Modifier
+    viewModel: CrearCuentaViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    CrearCuentaContent(
+        modifier = modifier,
+        uiState = uiState,
+        onVolver = onVolver,
+        onIniciarSesion = onIniciarSesion,
+        onCrearCuenta = { nombre, correo, contrasena ->
+            viewModel.register(
+                nombre = nombre,
+                correo = correo,
+                contrasena = contrasena
+            )
+        }
+    )
+}
+
+@Composable
+private fun CrearCuentaContent(
+    modifier: Modifier = Modifier,
+    uiState: CrearCuentaUiState = CrearCuentaUiState.Initial,
+    onVolver: () -> Unit = {},
+    onIniciarSesion: () -> Unit = {},
+    onCrearCuenta: (String, String, String) -> Unit = { _, _, _ -> }
 ) {
     var nombre by remember { mutableStateOf("") }
     var correo by remember { mutableStateOf("") }
@@ -68,17 +96,14 @@ fun CrearCuentaScreen(
             Box(
                 modifier = Modifier
                     .size(42.dp)
-                    .background(
-                        color = Color.White,
-                        shape = CircleShape
-                    )
+                    .background(Color.White, CircleShape)
                     .clickable { onVolver() },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "‹",
                     fontSize = 32.sp,
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = Color.Black
                 )
             }
 
@@ -109,9 +134,7 @@ fun CrearCuentaScreen(
             value = nombre,
             onValueChange = { nombre = it },
             modifier = Modifier.fillMaxWidth(),
-            placeholder = {
-                Text("Laura Gómez")
-            },
+            placeholder = { Text("Laura Gómez") },
             singleLine = true,
             shape = RoundedCornerShape(12.dp),
             colors = coloresCampo()
@@ -129,14 +152,9 @@ fun CrearCuentaScreen(
             value = correo,
             onValueChange = { correo = it },
             modifier = Modifier.fillMaxWidth(),
-            placeholder = {
-                Text("laura@correo.com")
-            },
+            placeholder = { Text("laura@correo.com") },
             leadingIcon = {
-                Text(
-                    text = "✉",
-                    fontSize = 18.sp
-                )
+                Text(text = "✉", fontSize = 18.sp)
             },
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -158,14 +176,9 @@ fun CrearCuentaScreen(
             value = telefono,
             onValueChange = { telefono = it },
             modifier = Modifier.fillMaxWidth(),
-            placeholder = {
-                Text("600 123 456")
-            },
+            placeholder = { Text("600 123 456") },
             leadingIcon = {
-                Text(
-                    text = "☎",
-                    fontSize = 18.sp
-                )
+                Text(text = "☎", fontSize = 18.sp)
             },
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -187,14 +200,9 @@ fun CrearCuentaScreen(
             value = contrasena,
             onValueChange = { contrasena = it },
             modifier = Modifier.fillMaxWidth(),
-            placeholder = {
-                Text("Mínimo 8 caracteres")
-            },
+            placeholder = { Text("Mínimo 8 caracteres") },
             leadingIcon = {
-                Text(
-                    text = "🔒",
-                    fontSize = 18.sp
-                )
+                Text(text = "🔒", fontSize = 18.sp)
             },
             trailingIcon = {
                 Text(
@@ -225,9 +233,7 @@ fun CrearCuentaScreen(
         ) {
             Checkbox(
                 checked = aceptarCondiciones,
-                onCheckedChange = {
-                    aceptarCondiciones = it
-                }
+                onCheckedChange = { aceptarCondiciones = it }
             )
 
             Text(
@@ -237,26 +243,37 @@ fun CrearCuentaScreen(
             )
         }
 
-        // Espacio para colocar las acciones abajo
-
-        Spacer(
-            modifier = Modifier.weight(1f)
-        )
+        Spacer(modifier = Modifier.weight(1f))
 
         // Botón crear cuenta
 
         Button(
-            onClick = {},
+            onClick = {
+                onCrearCuenta(nombre, correo, contrasena)
+            },
+            enabled = uiState !is CrearCuentaUiState.Registering &&
+                    aceptarCondiciones,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 8.dp),
             shape = RoundedCornerShape(12.dp)
         ) {
             Text(
-                text = "Crear cuenta",
+                text = if (uiState is CrearCuentaUiState.Registering) {
+                    "Creando cuenta..."
+                } else {
+                    "Crear cuenta"
+                },
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(vertical = 6.dp)
+            )
+        }
+
+        if (uiState is CrearCuentaUiState.Error) {
+            Text(
+                text = uiState.message,
+                color = MaterialTheme.colorScheme.error
             )
         }
 
@@ -308,6 +325,6 @@ private fun coloresCampo() = TextFieldDefaults.colors(
 @Composable
 fun CrearCuentaScreenPreview() {
     RepairLinkAndroidTheme {
-        CrearCuentaScreen()
+        CrearCuentaContent()
     }
 }
