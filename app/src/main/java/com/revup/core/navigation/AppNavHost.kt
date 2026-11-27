@@ -20,12 +20,13 @@ import com.revup.features.reparaciones.presentation.ReparacionesScreen
 import com.revup.features.iniciosesion.presentation.InicioSesionScreen
 @Composable
 fun AppNavHost(
+    startDestination: String,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
     NavHost(
         navController = navController,
-        startDestination = Routes.Login.route,
+        startDestination = startDestination,
         modifier = modifier
     ) {
         composable(Routes.Login.route) {
