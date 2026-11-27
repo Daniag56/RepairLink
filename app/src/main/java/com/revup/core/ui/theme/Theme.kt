@@ -37,7 +37,7 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun RepairLinkAndroidTheme(
-    darkTheme: Boolean = false,
+    darkTheme: Boolean = true,
     content: @Composable () -> Unit
 ) {
     MaterialTheme(

@@ -17,7 +17,7 @@ import com.revup.features.panel.presentation.PanelScreen
 import com.revup.features.seguimiento.presentation.SeguimientoScreen
 import com.revup.features.talleres.presentation.TalleresScreen
 import com.revup.features.reparaciones.presentation.ReparacionesScreen
-
+import com.revup.features.iniciosesion.presentation.InicioSesionScreen
 @Composable
 fun AppNavHost(
     modifier: Modifier = Modifier,
@@ -31,7 +31,20 @@ fun AppNavHost(
         composable(Routes.Login.route) {
             LoginScreen(
                 onAcceder = {
-                    navController.navigate(Routes.Talleres.route)
+                    navController.navigate(Routes.InicioSesion.route)
+                }
+            )
+        }
+        composable(Routes.InicioSesion.route){
+            InicioSesionScreen(
+                onVolver = {
+                    navController.popBackStack()
+                },
+                toRegister = { },
+                toHome = {
+                    navController.navigate(Routes.Talleres.route){
+                        popUpTo(Routes.Login.route){inclusive = true}
+                    }
                 }
             )
         }
