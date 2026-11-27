@@ -1,14 +1,24 @@
 package com.revup.features.miscoches.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class MisCochesViewModel @Inject constructor() : ViewModel() {
 
+    private val _uiState = MutableStateFlow<MisCochesUiState>(
+        MisCochesUiState.Initial
+    )
 
-    val coches = listOf(
+    val uiState = _uiState.asStateFlow()
+
+    val cochesDeEjemplo = listOf(
         CocheUi(
             id = 1,
             nombre = "Renault Clio 3",
@@ -23,8 +33,6 @@ class MisCochesViewModel @Inject constructor() : ViewModel() {
             id = 2,
             nombre = "SEAT León",
             matricula = "7730 HPT",
-
-
             taller = "AutoService Costa",
             estado = "En revisión",
             paso = "Diagnóstico en curso",
@@ -42,4 +50,37 @@ class MisCochesViewModel @Inject constructor() : ViewModel() {
             pasosTotales = 6
         )
     )
+
+    fun cargarCoches() {
+        viewModelScope.launch {
+            _uiState.value = MisCochesUiState.Loading
+
+            delay(1500)
+
+            _uiState.value = MisCochesUiState.Success(
+                coches = cochesDeEjemplo
+            )
+        }
+    }
+
+    init {
+        cargarCoches()
+    }
+}
+
+sealed class MisCochesUiState {
+
+    object Initial : MisCochesUiState()
+
+    object Loading : MisCochesUiState()
+
+    object Empty : MisCochesUiState()
+
+    data class Success(
+        val coches: List<CocheUi>
+    ) : MisCochesUiState()
+
+    data class Error(
+        val message: String
+    ) : MisCochesUiState()
 }
