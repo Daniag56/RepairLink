@@ -163,7 +163,7 @@ fun MisCitasContent(
                 )
             }
 
-            // Selector Próximas / Pasadas
+
 
             Row(
                 modifier = Modifier
@@ -191,7 +191,7 @@ fun MisCitasContent(
 
             Spacer(modifier = Modifier.size(16.dp))
 
-            // Citas
+
 
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
