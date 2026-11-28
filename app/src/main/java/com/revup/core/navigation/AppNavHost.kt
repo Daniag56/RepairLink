@@ -76,7 +76,9 @@ fun AppNavHost(
                 onMisCoches = {
                     navController.navigate(Routes.Reparaciones.route)
                 },
-                onPerfil = {}
+                onPerfil = {
+                    navController.navigate(Routes.Perfil.route)
+                }
             )
         }
 
@@ -88,7 +90,9 @@ fun AppNavHost(
                 onMisCoches = {
                     navController.navigate(Routes.MisCoches.route)
                 },
-                onPerfil = {}
+                onPerfil = {
+                    navController.navigate(Routes.Perfil.route)
+                }
             )
         }
 
@@ -101,7 +105,9 @@ fun AppNavHost(
                 onMisCoches = {
                     navController.navigate(Routes.MisCoches.route)
                 },
-                onPerfil = {}
+                onPerfil = {
+                    navController.navigate(Routes.Perfil.route)
+                }
             )
         }
 
@@ -111,17 +117,27 @@ fun AppNavHost(
                 onVerCoche = {
                     navController.navigate(Routes.Seguimiento.route)
                 },
-                onTalleres = {},
-                onPerfil = {}
+                onTalleres = {
+                    navController.navigate(Routes.Talleres.route)
+                },
+                onPerfil = {
+                    navController.navigate(Routes.Perfil.route)
+                }
             )
         }
 
         composable(Routes.Perfil.route) {
             PerfilScreen(
-                onTalleres = {},
-                onMisCoches = {},
+                onTalleres = {
+                    navController.navigate(Routes.Talleres.route)
+                },
+                onMisCoches = {
+                    navController.navigate(Routes.MisCoches.route)
+                },
                 onPerfil = {},
-                onMisCitas = {}
+                onMisCitas = {
+                    navController.navigate(Routes.MisCitas.route)
+                }
             )
         }
 
@@ -130,9 +146,15 @@ fun AppNavHost(
                 onVolver = {
                     navController.popBackStack()
                 },
-                onTalleres = {},
-                onMisCoches = {},
-                onPerfil = {}
+                onTalleres = {
+                    navController.navigate(Routes.Talleres.route)
+                },
+                onMisCoches = {
+                    navController.navigate(Routes.MisCoches.route)
+                },
+                onPerfil = {
+                    navController.navigate(Routes.Perfil.route)
+                }
             )
         }
 
@@ -179,9 +201,16 @@ fun AppNavHost(
 
         composable(Routes.CitaSolicitada.route) {
             CitaSolicitadaScreen(
-                onVerMisCitas = {},
+                onVerMisCitas = {
+                    navController.navigate(Routes.MisCitas.route)
+                },
                 onVolverInicio = {
-                    navController.navigate(Routes.Talleres.route)
+                    navController.navigate(Routes.Talleres.route) {
+                        popUpTo(Routes.Talleres.route) {
+                            inclusive = false
+                        }
+                        launchSingleTop = true
+                    }
                 }
             )
         }
