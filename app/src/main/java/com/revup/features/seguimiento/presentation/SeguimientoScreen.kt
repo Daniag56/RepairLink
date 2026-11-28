@@ -17,30 +17,51 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.revup.core.ui.theme.RepairLinkAndroidTheme
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, widthDp = 390, heightDp = 844)
 @Composable
 fun SeguimientoScreenPreview(){
     RepairLinkAndroidTheme() {
-        SeguimientoScreen(onVolver = {})
+        SeguimientoContent(
+            coche = "Renault Clio 3",
+            detalle = "4821KM - TALLER Hermano Ruiz",
+            estado = "En reparacion",
+            onVolver = {}
+        )
     }
 }
 
 @Composable
 fun SeguimientoScreen(
     onVolver: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: SeguimientoViewModel = hiltViewModel()
+){
+    SeguimientoContent(
+        coche = viewModel.coche,
+        detalle = viewModel.detalle,
+        estado = viewModel.estado,
+        onVolver = onVolver,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun SeguimientoContent(
+    coche: String,
+    detalle: String,
+    estado: String,
+    onVolver: () -> Unit,
     modifier: Modifier = Modifier
 ){
-    val viewModel = remember { SeguimientoViewModel() }
-
     Scaffold(
         modifier = modifier.fillMaxSize()
     ) {innerPadding -> Column(
@@ -60,11 +81,11 @@ fun SeguimientoScreen(
                 Button(onClick = { onVolver() }) { Icon(painter = painterResource(R.drawable.ic_left), contentDescription = null)}
                 Spacer(modifier = Modifier.width(12.dp))
                 Column(modifier = Modifier.weight(1f)){
-                    Text(text = "Renault Clio 3", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                    Text(text = "4821KM - TALLER Hermano Ruiz", fontSize = 12.sp)
+                    Text(text = coche, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text(text = detalle, fontSize = 12.sp)
                 }
                 Card {
-                    Text(text = "En reparacion", fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp))
+                    Text(text = estado, fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp))
                 }
             }
             Card(modifier = Modifier.fillMaxWidth()){

@@ -17,7 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -26,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.revup.R
 import com.revup.core.ui.theme.RepairLinkAndroidTheme
 import com.revup.core.ui.theme.RepairLinkColors
@@ -35,16 +35,31 @@ import com.revup.core.ui.theme.RepairLinkColors
 @Composable
 fun LoginScreenPreview(){
     RepairLinkAndroidTheme(){
-        LoginScreen(onAcceder = {})
+        LoginContent(
+            lema = "Tu taller y tu siempre conectados",
+            onAcceder = {}
+        )
     }
 }
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    onAcceder: () -> Unit
+    onAcceder: () -> Unit,
+    viewModel: LoginViewModel = hiltViewModel()
 ){
-    val viewModel = remember { LoginViewModel() }
+    LoginContent(
+        lema = viewModel.lema,
+        onAcceder = onAcceder,
+        modifier = modifier
+    )
+}
 
+@Composable
+fun LoginContent(
+    lema: String,
+    onAcceder: () -> Unit,
+    modifier: Modifier = Modifier
+){
     Scaffold(
         modifier = modifier.fillMaxSize()
     ) {innerPadding -> Column(
@@ -79,7 +94,7 @@ fun LoginScreen(
             }
 
             Text(
-                text = "Tu taller y tu siempre conectados",
+                text = lema,
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center,
                 color = RepairLinkColors.LightGrayText
