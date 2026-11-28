@@ -12,9 +12,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -22,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.revup.core.ui.theme.RepairLinkAndroidTheme
 
 @Composable
@@ -31,11 +36,17 @@ fun ElegirHoraScreen(
     modifier: Modifier = Modifier,
     viewModel: ElegirHoraViewModel = hiltViewModel()
 ) {
+    val horaElegida by viewModel.horaElegida.collectAsStateWithLifecycle()
+    val motivoElegido by viewModel.motivoElegido.collectAsStateWithLifecycle()
+
     ElegirHoraContent(
         filasHoras = viewModel.filasHoras,
         filasMotivos = viewModel.filasMotivos,
-        horaElegida = viewModel.horaElegida,
-        motivoElegido = viewModel.motivoElegido,
+        horaElegida = horaElegida,
+        motivoElegido = motivoElegido,
+        comentarioState = viewModel.comentarioTextFieldState,
+        onElegirHora = { viewModel.onElegirHora(it) },
+        onElegirMotivo = { viewModel.onElegirMotivo(it) },
         onVolver = onVolver,
         onSolicitarCita = onSolicitarCita,
         modifier = modifier
@@ -65,6 +76,9 @@ fun ElegirHoraScreenPreview() {
             ),
             horaElegida = "10:30",
             motivoElegido = "Revisión",
+            comentarioState = TextFieldState(),
+            onElegirHora = {},
+            onElegirMotivo = {},
             onVolver = {},
             onSolicitarCita = {}
         )
@@ -77,6 +91,9 @@ fun ElegirHoraContent(
     filasMotivos: List<List<String>>,
     horaElegida: String,
     motivoElegido: String,
+    comentarioState: TextFieldState,
+    onElegirHora: (String) -> Unit,
+    onElegirMotivo: (String) -> Unit,
     onVolver: () -> Unit,
     onSolicitarCita: () -> Unit,
     modifier: Modifier = Modifier
@@ -111,6 +128,7 @@ fun ElegirHoraContent(
                         BotonHora(
                             hora = hora,
                             elegida = hora.hora == horaElegida,
+                            onClick = { onElegirHora(hora.hora) },
                             modifier = Modifier.weight(1f)
                         )
                     }
@@ -125,9 +143,9 @@ fun ElegirHoraContent(
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     fila.forEach { motivo ->
                         if (motivo == motivoElegido) {
-                            Button(onClick = {}) { Text(text = motivo) }
+                            Button(onClick = { onElegirMotivo(motivo) }) { Text(text = motivo) }
                         } else {
-                            OutlinedButton(onClick = {}) { Text(text = motivo) }
+                            OutlinedButton(onClick = { onElegirMotivo(motivo) }) { Text(text = motivo) }
                         }
                     }
                 }
@@ -144,13 +162,12 @@ fun ElegirHoraContent(
         }
 
         Text(text = "Comentario para el taller (opcional)", fontSize = 13.sp, fontWeight = FontWeight.Bold)
-        Card(modifier = Modifier.fillMaxWidth()) {
-            Text(
-                text = "Ej.: chirrían los frenos al parar",
-                fontSize = 14.sp,
-                modifier = Modifier.padding(16.dp)
-            )
-        }
+        OutlinedTextField(
+            state = comentarioState,
+            placeholder = { Text(text = "Ej.: chirrían los frenos al parar", fontSize = 14.sp) },
+            lineLimits = TextFieldLineLimits.SingleLine,
+            modifier = Modifier.fillMaxWidth()
+        )
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -167,14 +184,15 @@ fun ElegirHoraContent(
 fun BotonHora(
     hora: HoraUi,
     elegida: Boolean,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (elegida) {
-        Button(onClick = {}, modifier = modifier) {
+        Button(onClick = { onClick() }, modifier = modifier) {
             Text(text = hora.hora, fontWeight = FontWeight.Bold)
         }
     } else {
-        OutlinedButton(onClick = {}, enabled = hora.libre, modifier = modifier) {
+        OutlinedButton(onClick = { onClick() }, enabled = hora.libre, modifier = modifier) {
             Text(text = hora.hora)
         }
     }

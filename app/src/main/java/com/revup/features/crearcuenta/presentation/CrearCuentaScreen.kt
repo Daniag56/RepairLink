@@ -14,9 +14,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.TextObfuscationMode
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SecureTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -24,15 +28,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,6 +50,7 @@ fun CrearCuentaScreen(
     viewModel: CrearCuentaViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val aceptarCondiciones by viewModel.aceptarCondiciones.collectAsStateWithLifecycle()
 
     LaunchedEffect(uiState) {
         if (uiState is CrearCuentaUiState.Registered) {
@@ -58,15 +61,15 @@ fun CrearCuentaScreen(
     CrearCuentaContent(
         modifier = modifier,
         uiState = uiState,
+        nombreState = viewModel.nombreTextFieldState,
+        correoState = viewModel.correoTextFieldState,
+        telefonoState = viewModel.telefonoTextFieldState,
+        contrasenaState = viewModel.contrasenaTextFieldState,
+        aceptarCondiciones = aceptarCondiciones,
+        onAceptarCondiciones = { viewModel.onAceptarCondiciones(it) },
         onVolver = onVolver,
         onIniciarSesion = onIniciarSesion,
-        onCrearCuenta = { nombre, correo, contrasena ->
-            viewModel.register(
-                nombre = nombre,
-                correo = correo,
-                contrasena = contrasena
-            )
-        }
+        onCrearCuenta = { viewModel.register() }
     )
 }
 
@@ -74,17 +77,17 @@ fun CrearCuentaScreen(
 private fun CrearCuentaContent(
     modifier: Modifier = Modifier,
     uiState: CrearCuentaUiState = CrearCuentaUiState.Initial,
+    nombreState: TextFieldState,
+    correoState: TextFieldState,
+    telefonoState: TextFieldState,
+    contrasenaState: TextFieldState,
+    aceptarCondiciones: Boolean,
+    onAceptarCondiciones: (Boolean) -> Unit,
     onVolver: () -> Unit = {},
     onIniciarSesion: () -> Unit = {},
-    onCrearCuenta: (String, String, String) -> Unit = { _, _, _ -> }
+    onCrearCuenta: () -> Unit = {}
 ) {
-    var nombre by remember { mutableStateOf("") }
-    var correo by remember { mutableStateOf("") }
-    var telefono by remember { mutableStateOf("") }
-    var contrasena by remember { mutableStateOf("") }
-
-    var aceptarCondiciones by remember { mutableStateOf(false) }
-    var mostrarContrasena by remember { mutableStateOf(false) }
+    var mostrarContrasena by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -138,11 +141,10 @@ private fun CrearCuentaContent(
         )
 
         TextField(
-            value = nombre,
-            onValueChange = { nombre = it },
+            state = nombreState,
             modifier = Modifier.fillMaxWidth(),
             placeholder = { Text("Laura Gómez") },
-            singleLine = true,
+            lineLimits = TextFieldLineLimits.SingleLine,
             shape = RoundedCornerShape(12.dp),
             colors = coloresCampo()
         )
@@ -156,14 +158,13 @@ private fun CrearCuentaContent(
         )
 
         TextField(
-            value = correo,
-            onValueChange = { correo = it },
+            state = correoState,
             modifier = Modifier.fillMaxWidth(),
             placeholder = { Text("laura@correo.com") },
             leadingIcon = {
                 Text(text = "✉", fontSize = 18.sp)
             },
-            singleLine = true,
+            lineLimits = TextFieldLineLimits.SingleLine,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email
             ),
@@ -180,14 +181,13 @@ private fun CrearCuentaContent(
         )
 
         TextField(
-            value = telefono,
-            onValueChange = { telefono = it },
+            state = telefonoState,
             modifier = Modifier.fillMaxWidth(),
             placeholder = { Text("600 123 456") },
             leadingIcon = {
                 Text(text = "☎", fontSize = 18.sp)
             },
-            singleLine = true,
+            lineLimits = TextFieldLineLimits.SingleLine,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Phone
             ),
@@ -203,9 +203,8 @@ private fun CrearCuentaContent(
             fontWeight = FontWeight.Medium
         )
 
-        TextField(
-            value = contrasena,
-            onValueChange = { contrasena = it },
+        SecureTextField(
+            state = contrasenaState,
             modifier = Modifier.fillMaxWidth(),
             placeholder = { Text("Mínimo 8 caracteres") },
             leadingIcon = {
@@ -220,11 +219,10 @@ private fun CrearCuentaContent(
                     }
                 )
             },
-            singleLine = true,
-            visualTransformation = if (mostrarContrasena) {
-                VisualTransformation.None
+            textObfuscationMode = if (mostrarContrasena) {
+                TextObfuscationMode.Visible
             } else {
-                PasswordVisualTransformation()
+                TextObfuscationMode.RevealLastTyped
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password
@@ -240,7 +238,7 @@ private fun CrearCuentaContent(
         ) {
             Checkbox(
                 checked = aceptarCondiciones,
-                onCheckedChange = { aceptarCondiciones = it }
+                onCheckedChange = { onAceptarCondiciones(it) }
             )
 
             Text(
@@ -256,7 +254,7 @@ private fun CrearCuentaContent(
 
         Button(
             onClick = {
-                onCrearCuenta(nombre, correo, contrasena)
+                onCrearCuenta()
             },
             enabled = uiState !is CrearCuentaUiState.Registering &&
                     aceptarCondiciones,
@@ -332,6 +330,13 @@ private fun coloresCampo() = TextFieldDefaults.colors(
 @Composable
 fun CrearCuentaScreenPreview() {
     RepairLinkAndroidTheme {
-        CrearCuentaContent()
+        CrearCuentaContent(
+            nombreState = TextFieldState(),
+            correoState = TextFieldState(),
+            telefonoState = TextFieldState(),
+            contrasenaState = TextFieldState(),
+            aceptarCondiciones = false,
+            onAceptarCondiciones = {}
+        )
     }
 }

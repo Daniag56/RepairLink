@@ -1,5 +1,6 @@
 package com.revup.features.crearcuenta.presentation
 
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.revup.features.auth.data.User
@@ -22,11 +23,23 @@ class CrearCuentaViewModel @Inject constructor(
 
     val uiState = _uiState.asStateFlow()
 
-    fun register(
-        nombre: String,
-        correo: String,
-        contrasena: String
-    ) {
+    val nombreTextFieldState = TextFieldState()
+    val correoTextFieldState = TextFieldState()
+    val telefonoTextFieldState = TextFieldState()
+    val contrasenaTextFieldState = TextFieldState()
+
+    private val _aceptarCondiciones = MutableStateFlow(false)
+    val aceptarCondiciones = _aceptarCondiciones.asStateFlow()
+
+    fun onAceptarCondiciones(aceptadas: Boolean) {
+        _aceptarCondiciones.value = aceptadas
+    }
+
+    fun register() {
+        val nombre = nombreTextFieldState.text.toString()
+        val correo = correoTextFieldState.text.toString()
+        val contrasena = contrasenaTextFieldState.text.toString()
+
         viewModelScope.launch {
             _uiState.value = CrearCuentaUiState.Registering
 

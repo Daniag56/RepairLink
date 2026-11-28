@@ -1,7 +1,10 @@
 package com.revup.features.elegirhora.presentation
 
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,7 +38,19 @@ class ElegirHoraViewModel @Inject constructor() : ViewModel() {
         listOf("Neumáticos", "Otro")
     )
 
-    val horaElegida = "10:30"
+    private val _horaElegida = MutableStateFlow("10:30")
+    val horaElegida = _horaElegida.asStateFlow()
 
-    val motivoElegido = "Revisión"
+    private val _motivoElegido = MutableStateFlow("Revisión")
+    val motivoElegido = _motivoElegido.asStateFlow()
+
+    val comentarioTextFieldState = TextFieldState()
+
+    fun onElegirHora(hora: String) {
+        _horaElegida.value = hora
+    }
+
+    fun onElegirMotivo(motivo: String) {
+        _motivoElegido.value = motivo
+    }
 }
