@@ -1,8 +1,9 @@
 package com.revup.core.navigation
+
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class Routes (val route: String) {
+sealed class Routes(val route: String) {
 
     @Serializable
     object Login : Routes("login")
@@ -34,10 +35,18 @@ sealed class Routes (val route: String) {
     @Serializable
     object Talleres : Routes("talleres")
 
-
     @Serializable
     object Perfil : Routes("perfil")
 
     @Serializable
     object InicioSesion : Routes("inicio_sesion")
+
+    @Serializable
+    object CrearCuenta : Routes("crear_cuenta")
+
+    @Serializable
+    object MisCitas : Routes("mis_citas")
+
+    @Serializable
+    object Chat : Routes("chat")
 }

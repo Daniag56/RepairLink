@@ -1,5 +1,6 @@
 package com.revup.features.perfil.presentation
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,6 +46,7 @@ fun PerfilScreen(
     onTalleres: () -> Unit,
     onMisCoches: () -> Unit,
     onPerfil: () -> Unit,
+    onMisCitas: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: PerfilViewModel = hiltViewModel()
 ) {
@@ -55,6 +57,7 @@ fun PerfilScreen(
         onTalleres = onTalleres,
         onMisCoches = onMisCoches,
         onPerfil = onPerfil,
+        onMisCitas = onMisCitas,
         onReintentar = viewModel::cargarPerfil,
         modifier = modifier
     )
@@ -67,6 +70,7 @@ fun PerfilContent(
     onMisCoches: () -> Unit,
     onPerfil: () -> Unit,
     onReintentar: () -> Unit,
+    onMisCitas: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -123,7 +127,8 @@ fun PerfilContent(
                         nombre = uiState.nombre,
                         correo = uiState.correo,
                         iniciales = uiState.iniciales,
-                        notificaciones = uiState.notificaciones
+                        notificaciones = uiState.notificaciones,
+                        onMisCitas = onMisCitas
                     )
                 }
 
@@ -155,7 +160,8 @@ private fun PerfilDatosContent(
     nombre: String,
     correo: String,
     iniciales: String,
-    notificaciones: Int
+    notificaciones: Int,
+    onMisCitas: () -> Unit
 ) {
     var avisosActivos by remember {
         mutableStateOf(true)
@@ -208,7 +214,11 @@ private fun PerfilDatosContent(
             modifier = Modifier.fillMaxWidth()
         ) {
             Column {
-                FilaPerfil("◷", "Mis citas")
+                FilaPerfil(
+                    icono = "◷",
+                    titulo = "Mis citas",
+                    onClick = onMisCitas
+                )
 
                 Divider()
 
@@ -298,11 +308,13 @@ fun FilaPerfil(
     icono: String = "",
     titulo: String,
     notificaciones: Int = 0,
-    iconoResource: Int = 0
+    iconoResource: Int = 0,
+    onClick: () -> Unit = {}
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable { onClick() }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -369,7 +381,8 @@ fun PerfilInitialPreview() {
             onTalleres = {},
             onMisCoches = {},
             onPerfil = {},
-            onReintentar = {}
+            onReintentar = {},
+            onMisCitas = {}
         )
     }
 }
@@ -383,7 +396,8 @@ fun PerfilLoadingPreview() {
             onTalleres = {},
             onMisCoches = {},
             onPerfil = {},
-            onReintentar = {}
+            onReintentar = {},
+            onMisCitas = {}
         )
     }
 }
@@ -397,7 +411,8 @@ fun PerfilEmptyPreview() {
             onTalleres = {},
             onMisCoches = {},
             onPerfil = {},
-            onReintentar = {}
+            onReintentar = {},
+            onMisCitas = {}
         )
     }
 }
@@ -416,7 +431,8 @@ fun PerfilSuccessPreview() {
             onTalleres = {},
             onMisCoches = {},
             onPerfil = {},
-            onReintentar = {}
+            onReintentar = {},
+            onMisCitas = {}
         )
     }
 }
@@ -432,7 +448,8 @@ fun PerfilErrorPreview() {
             onTalleres = {},
             onMisCoches = {},
             onPerfil = {},
-            onReintentar = {}
+            onReintentar = {},
+            onMisCitas = {}
         )
     }
 }

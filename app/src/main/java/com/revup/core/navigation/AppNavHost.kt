@@ -1,23 +1,27 @@
 package com.revup.core.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.NavHostController
-import androidx.compose.ui.Modifier
 import com.revup.features.auth.presentation.LoginScreen
 import com.revup.features.citasolicitada.presentation.CitaSolicitadaScreen
+import com.revup.features.chattaller.presentation.ChatTallerScreen
+import com.revup.features.crearcuenta.presentation.CrearCuentaScreen
 import com.revup.features.elegirdia.presentation.ElegirDiaScreen
 import com.revup.features.elegirhora.presentation.ElegirHoraScreen
 import com.revup.features.fichataller.presentation.FichaTallerScreen
 import com.revup.features.home.presentation.HomeScreen
+import com.revup.features.iniciosesion.presentation.InicioSesionScreen
 import com.revup.features.miscoches.presentation.MisCochesScreen
-import com.revup.features.panel.presentation.PanelScreen
+import com.revup.features.miscitas.presentation.MisCitasScreen
+import com.revup.features.perfil.presentation.PerfilScreen
+import com.revup.features.reparaciones.presentation.ReparacionesScreen
 import com.revup.features.seguimiento.presentation.SeguimientoScreen
 import com.revup.features.talleres.presentation.TalleresScreen
-import com.revup.features.reparaciones.presentation.ReparacionesScreen
-import com.revup.features.iniciosesion.presentation.InicioSesionScreen
+
 @Composable
 fun AppNavHost(
     modifier: Modifier = Modifier,
@@ -35,15 +39,36 @@ fun AppNavHost(
                 }
             )
         }
-        composable(Routes.InicioSesion.route){
+
+        composable(Routes.InicioSesion.route) {
             InicioSesionScreen(
                 onVolver = {
                     navController.popBackStack()
                 },
-                toRegister = { },
+                toRegister = {
+                    navController.navigate(Routes.CrearCuenta.route)
+                },
                 toHome = {
-                    navController.navigate(Routes.Talleres.route){
-                        popUpTo(Routes.Login.route){inclusive = true}
+                    navController.navigate(Routes.Talleres.route) {
+                        popUpTo(Routes.Login.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
+        }
+
+        composable(Routes.CrearCuenta.route) {
+            CrearCuentaScreen(
+                onVolver = {
+                    navController.popBackStack()
+                },
+                onIniciarSesion = {
+                    navController.navigate(Routes.InicioSesion.route) {
+                        popUpTo(Routes.CrearCuenta.route) {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
                     }
                 }
             )
@@ -58,38 +83,43 @@ fun AppNavHost(
                     navController.navigate(Routes.Reparaciones.route)
                 },
                 onPerfil = {
+                    navController.navigate(Routes.Perfil.route)
                 }
             )
         }
+
         composable(Routes.Reparaciones.route) {
             ReparacionesScreen(
                 onTalleres = {
                     navController.navigate(Routes.Talleres.route)
                 },
                 onMisCoches = {
+                    navController.navigate(Routes.MisCoches.route)
                 },
                 onPerfil = {
+                    navController.navigate(Routes.Perfil.route)
                 }
             )
         }
+
         composable(Routes.Talleres.route) {
             TalleresScreen(
                 onVerTaller = {
                     navController.navigate(Routes.FichaTaller.route)
                 },
-                onTalleres = {
-                },
+                onTalleres = {},
                 onMisCoches = {
                     navController.navigate(Routes.MisCoches.route)
                 },
                 onPerfil = {
+                    navController.navigate(Routes.Perfil.route)
                 }
             )
         }
 
         composable(Routes.MisCoches.route) {
             MisCochesScreen(
-                onAnadirCoche = { },
+                onAnadirCoche = {},
                 onVerCoche = {
                     navController.navigate(Routes.Seguimiento.route)
                 },
@@ -97,6 +127,47 @@ fun AppNavHost(
                     navController.navigate(Routes.Talleres.route)
                 },
                 onPerfil = {
+                    navController.navigate(Routes.Perfil.route)
+                }
+            )
+        }
+
+        composable(Routes.Perfil.route) {
+            PerfilScreen(
+                onTalleres = {
+                    navController.navigate(Routes.Talleres.route)
+                },
+                onMisCoches = {
+                    navController.navigate(Routes.MisCoches.route)
+                },
+                onPerfil = {},
+                onMisCitas = {
+                    navController.navigate(Routes.MisCitas.route)
+                }
+            )
+        }
+
+        composable(Routes.MisCitas.route) {
+            MisCitasScreen(
+                onVolver = {
+                    navController.popBackStack()
+                },
+                onTalleres = {
+                    navController.navigate(Routes.Talleres.route)
+                },
+                onMisCoches = {
+                    navController.navigate(Routes.MisCoches.route)
+                },
+                onPerfil = {
+                    navController.navigate(Routes.Perfil.route)
+                }
+            )
+        }
+
+        composable(Routes.Chat.route) {
+            ChatTallerScreen(
+                onVolver = {
+                    navController.popBackStack()
                 }
             )
         }
@@ -136,9 +207,16 @@ fun AppNavHost(
 
         composable(Routes.CitaSolicitada.route) {
             CitaSolicitadaScreen(
-                onVerMisCitas = { },
+                onVerMisCitas = {
+                    navController.navigate(Routes.MisCitas.route)
+                },
                 onVolverInicio = {
-                    navController.navigate(Routes.Talleres.route)
+                    navController.navigate(Routes.Talleres.route) {
+                        popUpTo(Routes.Talleres.route) {
+                            inclusive = false
+                        }
+                        launchSingleTop = true
+                    }
                 }
             )
         }

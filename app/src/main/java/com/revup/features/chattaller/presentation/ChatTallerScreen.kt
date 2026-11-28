@@ -1,6 +1,7 @@
 package com.revup.features.chattaller.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +16,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -46,7 +46,6 @@ fun ChatTallerScreen(
     ) {
 
         // Cabecera
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -61,6 +60,7 @@ fun ChatTallerScreen(
                 Box(
                     modifier = Modifier
                         .size(42.dp)
+                        .clickable { onVolver() }
                         .background(RepairLinkColors.Bg, CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
@@ -110,7 +110,6 @@ fun ChatTallerScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Pestañas Chat y Estado
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -153,7 +152,6 @@ fun ChatTallerScreen(
         }
 
         // Conversación
-
         LazyColumn(
             modifier = Modifier
                 .weight(1f)
@@ -184,7 +182,6 @@ fun ChatTallerScreen(
             }
 
             // Primer mensaje del taller
-
             item {
                 MensajeTaller(
                     texto = "Hemos terminado la revisión. Los discos delanteros están al límite; te recomendamos cambiarlos junto con las pastillas.",
@@ -193,7 +190,6 @@ fun ChatTallerScreen(
             }
 
             // Presupuesto
-
             item {
                 Column(
                     modifier = Modifier
@@ -251,7 +247,6 @@ fun ChatTallerScreen(
             }
 
             // Mensaje del cliente
-
             item {
                 MensajeCliente(
                     texto = "Vale, adelante con el cambio. ¿Para cuándo estaría?",
@@ -260,7 +255,6 @@ fun ChatTallerScreen(
             }
 
             // Respuesta del taller
-
             item {
                 MensajeTaller(
                     texto = "Hoy a las 18:00 lo tienes listo.",
@@ -269,7 +263,6 @@ fun ChatTallerScreen(
             }
 
             // Último mensaje del cliente
-
             item {
                 MensajeCliente(
                     texto = "Perfecto, gracias.",
@@ -279,7 +272,6 @@ fun ChatTallerScreen(
         }
 
         // Barra inferior para escribir
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
