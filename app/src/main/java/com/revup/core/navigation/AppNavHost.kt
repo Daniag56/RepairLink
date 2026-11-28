@@ -46,7 +46,9 @@ fun AppNavHost(
                 onVolver = {
                     navController.popBackStack()
                 },
-                toRegister = {},
+                toRegister = {
+                    navController.navigate(Routes.CrearCuenta.route)
+                },
                 toHome = {
                     navController.navigate(Routes.Talleres.route) {
                         popUpTo(Routes.Login.route) {
