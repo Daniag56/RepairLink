@@ -1,4 +1,3 @@
-
 package com.revup.core.navigation
 
 import androidx.compose.runtime.Composable
@@ -65,7 +64,12 @@ fun AppNavHost(
                     navController.popBackStack()
                 },
                 onIniciarSesion = {
-                    navController.popBackStack()
+                    navController.navigate(Routes.InicioSesion.route) {
+                        popUpTo(Routes.CrearCuenta.route) {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
                 }
             )
         }
